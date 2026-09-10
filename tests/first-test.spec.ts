@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('https://playground.bondaracademy.com/');
@@ -105,13 +105,58 @@ test('Locating parent elements', async ({ page }) => {
 });
 
 test('Reusing locators', async ({ page }) => {
-  const basicForm = page.locator('nb-card', { hasText: 'Basic form' });
+  const basicFormSection = page.locator('nb-card', { hasText: 'Basic form' });
+  const emailInputField = basicFormSection.getByLabel('Email');
 
-  await basicForm.getByLabel('Email').fill('test@test.com');
+  await emailInputField.fill('test@test.com');
 
-  await basicForm.getByLabel('Password').fill('playwright');
+  await basicFormSection.getByLabel('Password').fill('playwright');
 
-  await basicForm.locator('nb-checkbox').click();
+  await basicFormSection.locator('nb-checkbox').click();
 
-  await basicForm.getByRole('button').click();
+  await basicFormSection.getByRole('button').click();
+
+  await expect(emailInputField).toHaveValue('test@test.com');
+});
+
+test('Extracting values', async ({ page }) => {
+  //extracting text
+  const basicFormSection = page.locator('nb-card', { hasText: 'Basic form' });
+  const submitButtonText = await basicFormSection
+    .getByRole('button')
+    .textContent();
+  expect(submitButtonText).toEqual('Submit');
+
+  //extract multiple text values
+  const allRadioButtonValues = await page.locator('nb-radio').allTextContents();
+  expect(allRadioButtonValues).toContain('Option 1');
+
+  //extract input field values
+  const emailField = basicFormSection.getByRole('textbox', { name: 'Email' });
+  await emailField.fill('test@test.com');
+  const emailFieldValue = await emailField.inputValue();
+  console.log(emailFieldValue);
+
+  //extract attribute value
+  const emailPlaceholder = await emailField.getAttribute('placeholder');
+});
+
+test('Assertions', async ({ page }) => {
+  const basicFormSectionButton = page
+    .locator('nb-card', { hasText: 'Basic form' })
+    .getByRole('button');
+
+  //Generic assertions
+  const value = 5;
+  expect(value).toEqual(5);
+
+  const submitButtonText = await basicFormSectionButton.textContent();
+  expect(submitButtonText).toEqual('Submit');
+
+  //Locator assertion
+  await expect(basicFormSectionButton).toHaveText('Submit');
+
+  //Soft assertion
+  await expect.soft(basicFormSectionButton).toHaveText('Submit');
+  await basicFormSectionButton.click();
 });
