@@ -160,3 +160,7 @@ test('Assertions', async ({ page }) => {
   await expect.soft(basicFormSectionButton).toHaveText('Submit');
   await basicFormSectionButton.click();
 });
+
+test('Generated test', async ({ page }) => {
+  
+});
