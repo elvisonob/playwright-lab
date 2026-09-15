@@ -45,4 +45,52 @@ test('checkboxes', async ({ page }) => {
 test('Lists and dropdowns', async ({ page }) => {
   await page.getByText('Modal & Overlays').click();
   await page.getByText('Toastr').click();
+
+  // standard dropdown
+  await page
+    .locator('.form-group', { hasText: 'Toast type:' })
+    .getByRole('combobox')
+    .selectOption('info');
+
+  await expect(page.getByRole('combobox')).toHaveValue('info');
+
+  //custom dropdowns
+  await page
+    .locator('.form-group', { hasText: 'Position' })
+    .locator('nb-select')
+    .click();
+  //option 1
+  //await page.getByRole('list').getByText('bottom-end').click();
+  //option 2
+  await page.locator('nb-option', { hasText: 'bottom-end' }).click();
+  await expect(
+    page.locator('.form-group', { hasText: 'Position:' }).locator('nb-select'),
+  ).toHaveText('bottom-end');
+
+  //looping through the list
+  const positionDropDownField = page
+    .locator('.form-group', { hasText: 'Position' })
+    .locator('nb-select');
+  await positionDropDownField.click();
+  const allListValues = await page.locator('nb-option').allTextContents();
+  for (const listValue of allListValues) {
+    await page.locator('nb-option', { hasText: listValue }).click();
+    await expect(positionDropDownField).toHaveText(listValue);
+    await positionDropDownField.click();
+  }
+});
+
+test('tooltips', async ({ page }) => {
+  await page.getByText('Modal & Overlays').click();
+  await page.getByText('Tooltip').click();
+
+  await page.getByRole('button', { name: 'Top' }).hover();
+  await expect(page.getByRole('tooltip')).toHaveText('This is a tooltip');
+});
+
+test('dialog box', async ({ page }) => {
+  (await page.getByText('Tables & Data').click(),
+    await page.getByText('Smart Table').click());
+
+  await page.locator('tr', { hasText: 'mdo@gmail.com' }).locator('.nb-trash');
 });
