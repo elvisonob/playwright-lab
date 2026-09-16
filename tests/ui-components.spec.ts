@@ -89,8 +89,60 @@ test('tooltips', async ({ page }) => {
 });
 
 test('dialog box', async ({ page }) => {
-  (await page.getByText('Tables & Data').click(),
-    await page.getByText('Smart Table').click());
+  await page.getByText('Tables & Data').click();
+  await page.getByText('Smart Table').click();
 
-  await page.locator('tr', { hasText: 'mdo@gmail.com' }).locator('.nb-trash');
+  page.on('dialog', (dialog) => {
+    expect(dialog.message()).toEqual('Are you sure you want to delete?');
+    dialog.accept();
+  });
+
+  await page
+    .locator('tr', { hasText: 'mdo@gmail.com' })
+    .locator('.nb-trash')
+    .click();
+
+  await expect(
+    page.locator('tr', { hasText: 'mdo@gmail.com' }),
+  ).not.toBeVisible();
+});
+
+test('web tables', async ({ page }) => {
+  await page.getByText('Tables & Data').click();
+  await page.getByText('Smart Table').click();
+
+  //1 how to select row by any visible text
+  const tableRowByEmail = page.getByRole('row', {
+    name: 'twitter@outlook.com',
+  });
+  await tableRowByEmail.locator('.nb-edit').click();
+  await tableRowByEmail.getByPlaceholder('Age').fill('35');
+  await tableRowByEmail.locator('.nb-checkmark').click();
+  await expect(tableRowByEmail.locator('td').last()).toHaveText('35');
+
+  //2 get row by a specific column value
+  const tableRowById = page
+    .getByRole('row')
+    .filter({ has: page.getByRole('cell').nth(1).getByText('10') });
+  await tableRowById.locator('.nb-edit').click();
+  await page.locator('tbody').getByPlaceholder('E-mail').fill('test@test.com');
+  await page.locator('tbody').locator('.nb-checkmark').click();
+  await expect(tableRowById.locator('td').nth(5)).toHaveText('test@test.com');
+
+  //3 loop through table rows
+
+  const ages = ['20', '30', '40', '200'];
+
+  for (let age of ages) {
+    await page.getByPlaceholder('Age').fill(age);
+
+    if (age == '200') {
+      await expect(page.locator('tbody')).toContainText('No data found');
+    } else {
+      const allTableRows = await page.locator('tbody tr').all();
+      for (let row of allTableRows) {
+        await expect(row.locator('td').last()).toHaveText(age);
+      }
+    }
+  }
 });
