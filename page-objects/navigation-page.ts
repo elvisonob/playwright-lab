@@ -1,13 +1,7 @@
 import { Locator, Page } from '@playwright/test';
 
 export class NavigationPage {
-
   private readonly page: Page;
-  readonly formLayoutsMenu: Locator
-  readonly datePickerMenu: Locator
-  readonly toasterMenu: Locator
-  readonly tooltipMenu: Locator
-  readonly smartTableMenu: Locator
 
   constructor(page: Page) {
     this.page = page;
