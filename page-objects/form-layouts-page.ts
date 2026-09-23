@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { step } from '../helpers/test-step-decorator';
 
 export class FormLayoutsPage {
   private readonly page: Page;
@@ -7,6 +8,7 @@ export class FormLayoutsPage {
     this.page = page;
   }
 
+  @step
   async submitUsingTheGridForm(
     email: string,
     password: string,
@@ -24,6 +26,7 @@ export class FormLayoutsPage {
     await usingTheGridForm.getByRole('button', { name: 'Sign in' }).click();
   }
 
+  @step
   async submitInlineForm(
     fullName: string,
     email: string,
