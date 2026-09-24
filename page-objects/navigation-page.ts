@@ -1,11 +1,10 @@
 import { Locator, Page } from '@playwright/test';
 import { step } from '../helpers/test-step-decorator';
+import { HelperBase } from './helper-base';
 
-export class NavigationPage {
-  private readonly page: Page;
-
+export class NavigationPage extends HelperBase {
   constructor(page: Page) {
-    this.page = page;
+    super(page);
   }
 
   @step

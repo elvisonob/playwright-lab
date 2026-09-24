@@ -1,11 +1,10 @@
 import { Page, expect } from '@playwright/test';
 import { step } from '../helpers/test-step-decorator';
+import { HelperBase } from './helper-base';
 
-export class DatepickerPage {
-  private readonly page: Page;
-
+export class DatepickerPage extends HelperBase {
   constructor(page: Page) {
-    this.page = page;
+    super(page);
   }
 
   @step
