@@ -9,6 +9,6 @@ export class HelperBase {
 
   protected async getToastrMessage() {
     // this method validates toasts and gets its message
-    return "I'm cool toaster!";
+    return "I'm cool toasters!";
   }
 }
