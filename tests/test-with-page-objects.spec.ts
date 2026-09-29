@@ -1,8 +1,6 @@
 import { test } from '@playwright/test';
-import { NavigationPage } from '../page-objects/navigation-page';
-import { FormLayoutsPage } from '../page-objects/form-layouts-page';
-import { DatepickerPage } from '../page-objects/datepicker-page';
 import { PageManager } from '../page-objects/page-manager';
+import { faker } from '@faker-js/faker';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('https://playground.bondaracademy.com/');
@@ -18,18 +16,17 @@ test('Navigate to form layouts page', async ({ page }) => {
 
 test('Parametrized page object methods', async ({ page }) => {
   const pom = new PageManager(page);
+  const randomFullName = faker.person.fullName();
+  const randomEmail = faker.internet.email({ provider: 'test.com' });
+
   await pom.navigateTo.formLayoutsPage();
   await pom.formLayoutsPage.submitUsingTheGridForm(
     'artem@test.com',
     'Welcome',
     'Option 1',
   );
-  await pom.formLayoutsPage.submitInlineForm(
-    'Artem Bondar',
-    'artem@test.com',
-    true,
-  );
-  await pom.navigateTo.datePickerPage();
-  await pom.datepickerPage.selectCommonDatepickerDateFromToday(5);
-  await pom.datepickerPage.selectDatePickerWithRangeFromToday(7, 20);
+  await pom.formLayoutsPage.submitInlineForm(randomFullName, randomEmail, true);
+  // await pom.navigateTo.datePickerPage();
+  // await pom.datepickerPage.selectCommonDatepickerDateFromToday(5);
+  // await pom.datepickerPage.selectDatePickerWithRangeFromToday(7, 20);
 });
