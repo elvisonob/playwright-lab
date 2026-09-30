@@ -3,7 +3,7 @@ import { PageManager } from '../page-objects/page-manager';
 import { faker } from '@faker-js/faker';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('https://playground.bondaracademy.com/');
+  await page.goto('/');
 });
 
 test('Navigate to form layouts page', async ({ page }) => {
@@ -25,6 +25,7 @@ test('Parametrized page object methods', async ({ page }) => {
     'Welcome',
     'Option 1',
   );
+  await page.screenshot({ path: 'screenshots/formlayoutsPage.png' });
   await pom.formLayoutsPage.submitInlineForm(randomFullName, randomEmail, true);
   // await pom.navigateTo.datePickerPage();
   // await pom.datepickerPage.selectCommonDatepickerDateFromToday(5);

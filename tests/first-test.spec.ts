@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('https://playground.bondaracademy.com/');
+  await page.goto('/');
   await page.getByText('Forms').click();
   await page.getByText('Form Layouts').click();
 });
@@ -161,6 +161,4 @@ test('Assertions', async ({ page }) => {
   await basicFormSectionButton.click();
 });
 
-test('Generated test', async ({ page }) => {
-  
-});
+test('Generated test', async ({ page }) => {});

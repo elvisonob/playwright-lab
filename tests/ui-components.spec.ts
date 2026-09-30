@@ -1,10 +1,10 @@
 import { expect, test } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('https://playground.bondaracademy.com/');
+  await page.goto('/');
 });
 
-test.describe('Form Layouts page', () => {
+test.describe.only('Form Layouts page', () => {
   test.beforeEach(async ({ page }) => {
     await page.getByText('Forms').click();
     await page.getByText('Form Layouts').click();
@@ -16,6 +16,17 @@ test.describe('Form Layouts page', () => {
       .getByRole('textbox', { name: 'Email' });
     await usingTheGridEmailInput.fill('test@test.com');
     //await usingTheGridEmailInput.clear();
+    await usingTheGridEmailInput.clear();
+    await usingTheGridEmailInput.pressSequentially('test2@test.com', {
+      delay: 500,
+    });
+
+    //extract the value
+    const inputValue = await usingTheGridEmailInput.inputValue();
+
+    //assertions
+    await expect(usingTheGridEmailInput).toHaveValue('test2@test.com1');
+    await expect(usingTheGridEmailInput).toHaveValue(/test.com/);
   });
 });
 
