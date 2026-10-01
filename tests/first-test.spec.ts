@@ -104,7 +104,7 @@ test('Locating parent elements', async ({ page }) => {
     .click();
 });
 
-test('Reusing locators', async ({ page }) => {
+test('Reusing locators location', async ({ page }) => {
   const basicFormSection = page.locator('nb-card', { hasText: 'Basic form' });
   const emailInputField = basicFormSection.getByLabel('Email');
 
